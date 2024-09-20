@@ -11,7 +11,8 @@
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "space"
+    "indentStyle": "space",
+    "lineWidth": 80
   },
   "organizeImports": {
     "enabled": true
@@ -22,8 +23,14 @@
       "recommended": true,
       "style": {
         "noUnusedTemplateLiteral": "warn",
-        "useSelfClosingElements": "warn"
-      }
+        "useSelfClosingElements": "warn",
+        "noCommaOperator": "error"
+      },
+      "suspicious": {
+        "noConsole": "warn",
+        "noSuspiciousSemicolonInJsx": "error"
+      },
+      "security": {}
     }
   },
   "javascript": {
