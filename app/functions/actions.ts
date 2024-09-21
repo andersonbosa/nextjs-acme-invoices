@@ -5,21 +5,43 @@ import { queryClient } from './db'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
+export type ActionsState = {
+  errors?: {
+    customerId?: string[]
+    amount?: string[]
+    status?: string[]
+  }
+  message?: string | null
+}
+
 const FormSchema = z.object({
   id: z.string(),
-  customerId: z.string(),
-  amount: z.coerce.number(),
-  status: z.enum(['pending', 'paid']),
+  customerId: z.string({
+    invalid_type_error: 'Please select a customer.'
+  }),
+  amount: z.coerce
+    .number()
+    .gt(0, { message: 'Please enter an amount greater than $0.' }),
+  status: z.enum(['pending', 'paid'], {
+    invalid_type_error: 'Please select an invoice status.'
+  }),
   date: z.string()
 })
 
 const CreateInvoiceSchema = FormSchema.omit({ id: true, date: true })
 const UpdateInvoiceSchema = FormSchema.omit({ id: true, date: true })
 
-export async function createInvoiceAction(formData: FormData) {
+export async function createInvoiceAction(prevState: ActionsState, formData: FormData) {
   const rawFormData = Object.fromEntries(formData.entries())
-  const invoiceInput = CreateInvoiceSchema.parse(rawFormData)
-  const { customerId, amount, status } = invoiceInput
+
+  const validatedFields = CreateInvoiceSchema.safeParse(rawFormData)
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Create Invoice.'
+    }
+  }
+  const { customerId, amount, status } = validatedFields.data
 
   const amountInCents = amount * 100
   const date = new Date().toISOString().split('T')[0]
@@ -39,13 +61,25 @@ export async function createInvoiceAction(formData: FormData) {
   redirect('/dashboard/invoices')
 }
 
-export async function updateInvoiceAction(id: string, formData: FormData) {
-  const { customerId, amount, status } = UpdateInvoiceSchema.parse({
+export async function updateInvoiceAction(
+  id: string,
+  prevState: ActionsState,
+  formData: FormData
+) {
+  const validatedFields = UpdateInvoiceSchema.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
     status: formData.get('status')
   })
 
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Missing Fields. Failed to Update Invoice.'
+    }
+  }
+
+  const { customerId, amount, status } = validatedFields.data
   const amountInCents = amount * 100
 
   try {

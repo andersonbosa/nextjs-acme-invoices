@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 
-export default function Error({
+export default function ErrorPage({
   error,
   reset
 }: {
@@ -10,8 +10,7 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Optionally log the error to an error reporting service
-    console.error(error)
+    alert(error)
   }, [error])
 
   return (
