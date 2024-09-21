@@ -14,7 +14,7 @@ import { LOGGER } from './logger'
 export async function fetchRevenue() {
   try {
     LOGGER.debug('Fetching revenue data...')
-    // await new Promise((resolve) => setTimeout(resolve, 3000))
+    await new Promise((resolve) => setTimeout(resolve, 3000))
     const data = await queryClient<Revenue[]> /* SQL */`SELECT * FROM revenue`
     LOGGER.debug('Data fetch completed after 3 seconds.', data)
     return data

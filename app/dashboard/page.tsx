@@ -12,8 +12,10 @@ import {
 export default async function Page({
   children
 }: { children: React.ReactNode }) {
-  const revenue = await fetchRevenue()
-  const latestInvoices = await fetchLatestInvoices()
+  const [revenue, latestInvoices] = await Promise.all([
+    fetchRevenue(),
+    fetchLatestInvoices()
+  ])
   const {
     numberOfCustomers,
     numberOfInvoices,
