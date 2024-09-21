@@ -26,6 +26,7 @@ export async function fetchRevenue() {
 
 export async function fetchLatestInvoices() {
   try {
+    await new Promise((resolve) => setTimeout(resolve, 2000))
     const data = await queryClient<LatestInvoiceRaw[]> /* SQL */`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
       FROM invoices
@@ -65,9 +66,7 @@ export async function fetchCardData() {
     const numberOfInvoices = Number(invoicesCount[0].count ?? '0')
     const numberOfCustomers = Number(customersCount[0].count ?? '0')
     const totalPaidInvoices = formatCurrency(invoicesStatus[0].paid ?? '0')
-    const totalPendingInvoices = formatCurrency(
-      invoicesStatus[0].pending ?? '0'
-    )
+    const totalPendingInvoices = formatCurrency(invoicesStatus[0].pending ?? '0')
 
     return {
       numberOfCustomers,
@@ -82,10 +81,7 @@ export async function fetchCardData() {
 }
 
 const ITEMS_PER_PAGE = 6
-export async function fetchFilteredInvoices(
-  query: string,
-  currentPage: number
-) {
+export async function fetchFilteredInvoices(query: string, currentPage: number) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE
 
   try {

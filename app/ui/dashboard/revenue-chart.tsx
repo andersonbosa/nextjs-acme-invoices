@@ -2,17 +2,16 @@ import { generateYAxis } from '@/app/functions/utils'
 import { CalendarIcon } from '@heroicons/react/24/outline'
 import { lusitana } from '@/app/ui/fonts'
 import type { Revenue } from '@/app/functions/definitions'
+import { fetchRevenue } from '@/app/functions/data'
 
 // For data visualization UI:
 // https://www.tremor.so/
 // https://www.chartjs.org/
 // https://airbnb.io/visx/
 
-export default async function RevenueChart({
-  revenue
-}: {
-  revenue: Revenue[]
-}) {
+// export default async function RevenueChart({ revenue }: { revenue: Revenue[] }) {
+ export default async function RevenueChart() {
+  const revenue = await fetchRevenue();
   const chartHeight = 350
 
   const { yAxisLabels, topLabel } = generateYAxis(revenue)
