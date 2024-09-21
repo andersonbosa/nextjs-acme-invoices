@@ -1,13 +1,12 @@
+import { queryClient } from '@/app/functions/db'
 import bcrypt from 'bcrypt'
+import { headers } from 'next/headers'
 import {
-  invoices,
   customers,
+  invoices,
   revenue,
   users
 } from '../../functions/placeholder-data'
-import { queryClient } from '@/app/functions/db'
-import { LOGGER } from '@/app/functions/logger'
-import { headers } from 'next/headers'
 
 async function seedUsers() {
   await queryClient`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`
@@ -106,7 +105,7 @@ async function seedRevenue() {
   return insertedRevenue
 }
 
-// 
+// http :3000/api/seed x-api-key:ce57969350a95e58a436929eeb5f598f
 export async function GET() {
   try {
     const AUTHORIZED_API_KEY = 'ce57969350a95e58a436929eeb5f598f'

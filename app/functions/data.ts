@@ -90,7 +90,7 @@ export async function fetchFilteredInvoices(query: string, currentPage: number) 
         invoices.id,
         invoices.amount,
         invoices.date,
-        invoices.status,k
+        invoices.status,
         customers.name,
         customers.email,
         customers.image_url

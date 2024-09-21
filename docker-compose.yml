@@ -23,8 +23,9 @@ services:
       POSTGRES_DB: acme_db
     ports:
       - '5432:5432'
-    # volumes:
-    #   - db_data:/var/lib/postgresql/data
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      # - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql
     hostname: postgres_host
     networks:
       - nextjs_dashboard_net
