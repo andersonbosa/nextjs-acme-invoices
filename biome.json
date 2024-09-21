@@ -7,7 +7,10 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": ["node_modules/**/*", ".next/**/*"]
+    "ignore": [
+      "node_modules/**/*",
+      ".next/**/*"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -22,8 +25,8 @@
     "rules": {
       "recommended": true,
       "style": {
+        "useSelfClosingElements": "off",
         "noUnusedTemplateLiteral": "warn",
-        "useSelfClosingElements": "warn",
         "noCommaOperator": "error"
       },
       "suspicious": {

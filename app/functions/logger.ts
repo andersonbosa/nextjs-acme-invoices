@@ -8,7 +8,7 @@ const createWinstonLogger = (): winston.Logger => {
     levels: winston.config.syslog.levels,
     transports: [
       new winston.transports.Console({
-        level: 'info',
+        level: 'debug',
         format: winston.format.combine(
           winston.format.colorize({ all: true }),
           winston.format.timestamp({ format: 'YYYY-MM-DD hh:mm:ss.SSS A' }),
@@ -21,7 +21,7 @@ const createWinstonLogger = (): winston.Logger => {
       }),
       new winston.transports.File({
         level: 'debug',
-        filename: join(__dirname, '..', 'app.log'),
+        filename: 'logs/app.log',
         format: winston.format.combine(
           winston.format.timestamp(),
           winston.format.json()
