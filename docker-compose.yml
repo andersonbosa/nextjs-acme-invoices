@@ -1,0 +1,48 @@
+name: nextjs_dashboard
+
+services:
+  # nextjs-app:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   env_file: .env
+  #   ports:
+  #     - '8765:3000'
+  #   networks:
+  #     - nextjs_dashboard_net
+  #   volumes:
+  #     - ./:/home/node/app
+  #     - node_modules:/home/node/app/node_modules
+  #     - .next:/home/node/app/.next
+
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: psql_user
+      POSTGRES_PASSWORD: psql_pass
+      POSTGRES_DB: acme_db
+    ports:
+      - '5432:5432'
+    # volumes:
+    #   - db_data:/var/lib/postgresql/data
+    hostname: postgres_host
+    networks:
+      - nextjs_dashboard_net
+    healthcheck:
+      test: pg_isready --host=127.0.0.1 --port=5432 --dbname=acme_db --username=psql_user
+      start_period: '5s'
+      interval: '5s'
+      timeout: '5s'
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256MB
+
+
+volumes:
+  node_modules:
+  db_data:
+
+networks:
+  nextjs_dashboard_net:
