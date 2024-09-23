@@ -32,22 +32,33 @@ const CreateInvoiceSchema = FormSchema.omit({ id: true, date: true })
 const UpdateInvoiceSchema = FormSchema.omit({ id: true, date: true })
 
 export async function createInvoiceAction(prevState: ActionsState, formData: FormData) {
-  const rawFormData = Object.fromEntries(formData.entries())
+  /*
+    NOTE: por alguma razão essa abordagem faz com que as mensagens de
+    erro definida em `invalid_type_error` não cheguem ao componente.
+    // const rawFormData = Object.fromEntries(formData.entries())
+    // const validatedFields = CreateInvoiceSchema.safeParse(rawFormData)
+  */
 
-  const validatedFields = CreateInvoiceSchema.safeParse(rawFormData)
+  const validatedFields = CreateInvoiceSchema.safeParse({
+    customerId: formData.get('customerId'),
+    amount: formData.get('amount'),
+    status: formData.get('status')
+  })
+
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create Invoice.'
     }
   }
+
   const { customerId, amount, status } = validatedFields.data
 
   const amountInCents = amount * 100
   const date = new Date().toISOString().split('T')[0]
 
   try {
-    await queryClient`
+    await queryClient /* SQL */`
       INSERT INTO invoices (customer_id, amount, status, date)
       VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
     `
