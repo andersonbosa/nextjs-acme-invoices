@@ -4,6 +4,8 @@ import { z } from 'zod'
 import { queryClient } from './db'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { signIn } from '@/auth'
+import { AuthError } from 'next-auth'
 
 export type ActionsState = {
   errors?: {
@@ -32,6 +34,7 @@ const CreateInvoiceSchema = FormSchema.omit({ id: true, date: true })
 const UpdateInvoiceSchema = FormSchema.omit({ id: true, date: true })
 
 export async function createInvoiceAction(prevState: ActionsState, formData: FormData) {
+  console.log('createInvoiceAction', prevState)
   /*
     NOTE: por alguma razão essa abordagem faz com que as mensagens de
     erro definida em `invalid_type_error` não cheguem ao componente.
@@ -77,6 +80,7 @@ export async function updateInvoiceAction(
   prevState: ActionsState,
   formData: FormData
 ) {
+  console.log('updateInvoiceAction', prevState)
   const validatedFields = UpdateInvoiceSchema.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
@@ -114,5 +118,26 @@ export async function deleteInvoiceAction(id: string) {
     return { message: 'Deleted Invoice.' }
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Invoice.' }
+  }
+}
+
+export async function authenticateAction(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  console.log('authenticateAction', prevState)
+
+  try {
+    await signIn('credentials', formData)
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.'
+        default:
+          return 'Something went wrong.'
+      }
+    }
+    throw error
   }
 }
