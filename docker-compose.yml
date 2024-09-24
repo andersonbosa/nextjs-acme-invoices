@@ -1,19 +1,21 @@
 name: nextjs_dashboard
 
 services:
-  # nextjs-app:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile
-  #   env_file: .env
-  #   ports:
-  #     - '8765:3000'
-  #   networks:
-  #     - nextjs_dashboard_net
-  #   volumes:
-  #     - ./:/home/node/app
-  #     - node_modules:/home/node/app/node_modules
-  #     - .next:/home/node/app/.next
+  nextjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    environment:
+      - DATABASE_URL=postgresql://psql_user:psql_pass@postgres_host:5432/acme_db
+    ports:
+      - '3000:3000'
+    networks:
+      - nextjs_dashboard_net
+    volumes:
+      - ./:/home/node/app
+      # - node_modules:/home/node/app/node_modules
+      # - .next:/home/node/app/.next
 
   postgres:
     image: postgres:14
