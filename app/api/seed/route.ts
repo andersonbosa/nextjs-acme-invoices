@@ -1,12 +1,7 @@
 import { queryClient } from '@/app/functions/db'
 import bcrypt from 'bcrypt'
 import { headers } from 'next/headers'
-import {
-  customers,
-  invoices,
-  revenue,
-  users
-} from '../../functions/placeholder-data'
+import { customers, invoices, revenue, users } from '../../functions/placeholder-data'
 
 async function seedUsers() {
   await queryClient`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`

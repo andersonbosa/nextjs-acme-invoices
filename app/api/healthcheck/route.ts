@@ -1,4 +1,4 @@
-import { queryClient } from "@/app/functions/db"
+import { queryClient } from '@/app/functions/db'
 
 export async function GET() {
   try {
