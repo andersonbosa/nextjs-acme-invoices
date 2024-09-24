@@ -30,8 +30,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/functions/placeholder-data.ts",
-    "scripts/seed.js"
+    "src/app/functions/placeholder-data.ts"
   ],
   "exclude": ["node_modules"]
 }
